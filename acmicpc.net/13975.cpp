@@ -1,39 +1,17 @@
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <algorithm>
 
 using namespace std;
 
 vector<int> v;
-vector<int> r;
-int T, sum;
+priority_queue<int, vector<int>, greater<int>> q;
 
-//인덱스의 범위를 받는다.
-int solve(int start, int end)
-{
-	int diff = end - start;
-	if (diff == 0)
-	{
-		return v[start];
-	}
-	else if (diff == 1)
-	{
-		cout << v[start] + v[end] << "\n";
-		sum += v[start] + v[end];
-		return v[start] + v[end];
-	}
-	int mid = (start + end) / 2;
-	sum += solve(start, mid) + solve(mid + 1, end);
-	return sum;
-}
+int T, sum;
 void set()
 {
 	sort(v.begin(), v.end());
-	for (int i = 0; i < v.size(); i++)
-	{
-		cout << v[i] << " ";
-	}
-	cout << "\n";
 	vector<int> t;
 	int start = 0;
 	int end = v.size() - 1 - (v.size() % 2);
@@ -50,6 +28,24 @@ void set()
 	{
 		v[i] = t[i];
 	}
+	q.push(v[0] + v[1]);
+	for (int i = 2; i < v.size(); i++)
+	{
+		q.push(v[i]);
+	}
+}
+
+int solve()
+{
+	while (q.size() > 1)
+	{
+		int x1 = q.top(); q.pop();
+		int x2 = q.top(); q.pop();
+
+		q.push(x1 + x2);
+	}
+
+	return q.top();
 }
 int main(int start, int end)
 {
@@ -67,15 +63,8 @@ int main(int start, int end)
 			cin >> x;
 			v.push_back(x);
 		}
-		r.assign(v.size(), 0);
 		set();
-		for (int i = 0; i < v.size(); i++)
-		{
-			cout << v[i] << " ";
-		}
-		//solve(0, v.size() - 1);
-		//cout << sum << "\n";
-		cout << solve(0, v.size() - 1);
+		cout << solve() << "\n";
 	}
 
 }
