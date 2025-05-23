@@ -1,51 +1,24 @@
 #include <iostream>
-#include <vector>
 #include <queue>
 #include <algorithm>
 
 using namespace std;
+priority_queue<long long, vector<long long>, greater<long long>> q;
 
-vector<int> v;
-priority_queue<int, vector<int>, greater<int>> q;
-
-int T, sum;
-void set()
+int T;
+long long solve()
 {
-	sort(v.begin(), v.end());
-	vector<int> t;
-	int start = 0;
-	int end = v.size() - 1 - (v.size() % 2);
-	while (start < end)
-	{
-		t.push_back(v[start++]);
-		t.push_back(v[end--]);
-	}
-	if (v.size() % 2 == 1)
-	{
-		t.push_back(v[v.size() - 1]);
-	}
-	for (int i = 0; i < t.size(); i++)
-	{
-		v[i] = t[i];
-	}
-	q.push(v[0] + v[1]);
-	for (int i = 2; i < v.size(); i++)
-	{
-		q.push(v[i]);
-	}
-}
-
-int solve()
-{
+	long long sum = 0;
 	while (q.size() > 1)
 	{
-		int x1 = q.top(); q.pop();
-		int x2 = q.top(); q.pop();
+		long long x1 = q.top(); q.pop();
+		long long x2 = q.top(); q.pop();
 
+		sum += x1 + x2;
 		q.push(x1 + x2);
 	}
-
-	return q.top();
+	q.pop();
+	return sum;
 }
 int main(int start, int end)
 {
@@ -53,7 +26,6 @@ int main(int start, int end)
 	cin >> T;
 	while (T--)
 	{
-		v.clear();
 		int t;
 		sum = 0;
 		cin >> t;
@@ -61,9 +33,8 @@ int main(int start, int end)
 		{
 			int x;
 			cin >> x;
-			v.push_back(x);
+			q.push(x);
 		}
-		set();
 		cout << solve() << "\n";
 	}
 
