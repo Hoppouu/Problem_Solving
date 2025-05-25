@@ -83,6 +83,5 @@ void solve()
 int main()
 {
 	cin >> n;
-	
 	solve();
 }
