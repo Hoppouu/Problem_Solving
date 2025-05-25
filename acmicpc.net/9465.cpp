@@ -1,57 +1,39 @@
 #include <iostream>
 #include <vector>
 using namespace std;
-
 int n;
-vector<vector<int>> can;
-vector<vector<pair<int, int>>> cnt;
-int solve()
-{
-    int sum = 0;
-    for(int i = cnt.size() - 1; i >= 0; i--)
-    {
-        for(int j = 0; j < cnt[i].size(); j++)
-        {
-            int r = cnt[i][j].first;
-            int c = cnt[i][j].second;
-            if(can[r][c])
-            {
-                int dr[4] = { 1, -1, 0, 0};
-                int dc[4] = { 0, 0, 1, -1};
-                for(int k = 0; k < 4; k++)
-                {
-                    int nr = r + dr[k];
-                    int nc = c + dc[k];
-
-                    if(nr >= 0 && nr < 2 && nc >= 0 && nc < n)
-                    {
-                        can[nr][nc] = 0;
-                    }
-                }
-                sum += i;
-            }
-        }
-    }
-    return sum;
-}
+int arr[2][100001];
+int dp[2][100001];
 int main()
 {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
     int T;
     cin >> T;
-    while(T--)
+    while (T--)
     {
         cin >> n;
-        cnt.assign(101, vector<pair<int, int>>());
-        can.assign(2, vector<int>(n, 1));
-        for(int i = 0; i < 2; i++)
+        fill(&dp[0][0], &dp[0][0] + 100001 * 2, 0);
+        for (int i = 0; i < 2; i++)
         {
-            for(int j = 0; j < n; j++)
+            for (int j = 1; j <= n; j++)
             {
-                int x;
-                cin >> x;
-                cnt[x].push_back({i, j});
+                cin >> arr[i][j];
             }
         }
-        cout << solve() << "\n";
+        dp[0][1] = arr[0][1];
+        dp[1][1] = arr[1][1];
+        for (int i = 2; i <= n; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                int x1 = dp[j][i - 2] + arr[(j + 1) % 2][i - 1];
+                int x2 = dp[(j + 1) % 2][i - 1];
+                int x3 = dp[(j + 1) % 2][i - 2];
+                dp[j][i] = max(max(x1, x2), x3) + arr[j][i];
+            }
+        }
+        cout << max(dp[0][n], dp[1][n]) << "\n";
     }
 }
