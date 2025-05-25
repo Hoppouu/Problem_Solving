@@ -1,47 +1,77 @@
 #include <iostream>
-#include <algorithm>
 #include <vector>
 using namespace std;
 
-int n, m;
-vector<int> v, ans;
-void print()
+int n, m, ans = 1 << 30;
+vector<pair<int, int>> house, store;
+vector<int> selected;
+
+int dist(int x1, int y1, int x2, int y2)
 {
-	for(int i = 0; i < m; i++)
-	{
-		cout<< ans[i] << " ";
-	}
-	cout << "\n";
+	return abs(x1 - x2) + abs(y2 - y1);
 }
-void solve(int k, int x)
+
+int solve1()
 {
-	if(k == m)
+	int sum = 0;
+	for (int i = 0; i < house.size(); i++)
 	{
-		print();
+		int minx = 1 << 30;
+		int x1 = house[i].first, y1 = house[i].second;
+		for(int j = 0; j < store.size(); j++)
+		{
+			if (selected[j])
+			{
+				int x2 = store[j].first, y2 = store[j].second;
+				minx = min(dist(x1, y1, x2, y2), minx);
+			}
+		}
+		sum += minx;
+	}
+
+	return sum;
+}
+
+void solve(int k)
+{
+	if (k == m)
+	{
+		ans = min(solve1(), ans);
 		return;
 	}
-	
-	int t = 0;
-	for(int i = x; i < v.size(); i++)
+	for (int i = 0; i < store.size(); i++)
 	{
-		if(v[i] > t)
+		if (!selected[i])
 		{
-			t = v[i];
-			ans[k] = v[i];
-			solve(k + 1, i);
+			selected[i] = 1;
+			solve(k + 1);
+			selected[i] = 0;
 		}
 	}
 }
+
 int main()
 {
 	cin >> n >> m;
-	ans.assign(n, 0);
-	for (int i = 0; i < n; i++)
+	
+	for (int i = 1; i <= n; i++)
 	{
-		int x;
-		cin >> x;
-		v.push_back(x);
+		for (int j = 1; j <= n; j++)
+		{
+			int x;
+			cin >> x;
+			if (x == 1)
+			{
+				house.push_back({ i, j });
+			}
+			else if (x == 2)
+			{
+				store.push_back({ i, j });
+			}
+		}
 	}
-	sort(v.begin(), v.end());
-	solve(0, 0);
+	selected.assign(store.size(), 0);
+	solve(0);
+
+	cout << ans << "\n";
 }
