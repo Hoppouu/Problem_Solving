@@ -1,17 +1,6 @@
 #include <iostream>
 #include <vector>
-
 using namespace std;
-/*
-7
-A B C
-B D .
-C E F
-E . .
-F . G
-D . .
-G . .
-*/
 
 vector<vector<int>> v;
 void pre(int x)
