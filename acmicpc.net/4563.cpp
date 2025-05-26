@@ -1,27 +1,27 @@
 #include <iostream>
 using namespace std;
 
-int T, a;
+long long a;
 
 int solve()
 {
     // c = A / (2 * t) + t / 2
     // b = A / (2 * t) - t / 2
-    // t는 2의 배수 이어야함.
-    int A = a * a;
+    long long A = a * a;
     int cnt = 0;
-    //c > a + b 이어야한다.
-    for(int t = 2; t < a * a; t++)
+    //c < a + b 이어야한다.
+    for (int t = 1; t < a; t++)
     {
-        if(A % (2 * t) != 0)
+        long long c = A / t + t;
+        long long b = A / t - t;
+        if (A % t != 0 || c % 2 != 0 || b % 2 != 0)
         {
             continue;
         }
-        int c = A / (2 * t) + t / 2;
-        int b = A / (2 * t) - t / 2;
-        if(c > b + c)
+        c /= 2;
+        b /= 2;
+        if (c < a + b && b > a)
         {
-            cout << a << " " << b << " " << c << "\n";
             cnt++;
         }
     }
@@ -29,10 +29,13 @@ int solve()
 }
 int main()
 {
-    cin >> T;
-    while(T--)
+    while (true)
     {
         cin >> a;
+        if (a == 0)
+        {
+            break;
+        }
         cout << solve() << "\n";
     }
 }
