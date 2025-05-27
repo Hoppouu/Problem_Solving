@@ -16,7 +16,7 @@ int main()
 	}
 	for (int i = 1; i <= n; i++)
 	{
-		for (int j = 0; j < i; j++)
+		for (int j = 0; j < i / 2 + 1; j++)
 		{
 			dp[i] = max(dp[i], dp[i - j] + dp[j]);
 		}
