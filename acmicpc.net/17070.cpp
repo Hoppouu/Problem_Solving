@@ -29,16 +29,6 @@ void solve(int r, int c, int dir)
 {
 	if (r == n - 1 && c == n - 1)
 	{
-		for (int i = 0; i < n; i++)
-		{
-			for (int j = 0; j < n; j++)
-			{
-				cout << used[i][j] << " ";
-			}
-			cout << "\n";
-		}
-		cout << "\n";
-
 		cnt++;
 	}
 	for (int j = 0; j < 3; j++)
@@ -52,7 +42,10 @@ void solve(int r, int c, int dir)
 
 		if (check(nr, nc) && map[nr][nc] == 0 && !used[nr][nc])
 		{
-			if(j == 2 && !used[r + 1][c] && !used[r][c + 1])
+			if (j == 2 && ((used[r + 1][c] || used[r][c + 1]) || (map[r + 1][c] != 0 || map[r][c+1] != 0)))
+			{
+				continue;
+			}
 			if (j == 2)
 			{
 				used[r + 1][c] = 1;
