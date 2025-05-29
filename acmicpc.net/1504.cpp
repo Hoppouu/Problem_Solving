@@ -46,6 +46,7 @@ int main()
 
     int a, b;
     cin >> a >> b;
+    solve(1);
 
     int sum = INF;
     if (dist[n] == INF || dist[a] == INF || dist[b] == INF)
@@ -57,9 +58,9 @@ int main()
         int t = 0;
         int q;
         int arr[2] = { a, b };
-            solve(1);
         for (int i = 0; i < 2; i++)
         {
+            solve(1);
             q = arr[i];
             int w = a + b - q;
             t += dist[q];
@@ -67,7 +68,6 @@ int main()
             t += dist[w];
             solve(w);
             t += dist[n];
-            cout << t << "\n";
             sum = min(sum, t);
         }
     }
