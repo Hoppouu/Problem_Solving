@@ -55,11 +55,11 @@ int main()
     }
     else
     {
-        int t = 0;
-        int q;
+        int t, q;
         int arr[2] = { a, b };
         for (int i = 0; i < 2; i++)
         {
+            t = 0;
             solve(1);
             q = arr[i];
             int w = a + b - q;
