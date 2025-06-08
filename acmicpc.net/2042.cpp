@@ -1,24 +1,29 @@
+
+
 #include <iostream>
 #include <cmath>
 #include <vector>
 typedef long long ll;
 using namespace std;
 
-vector<ll> v, tree;
-ll make_tree(int node, int start, int end)
-{
-	if (start == end)
-	{
-		tree[node] = v[start];
-		return tree[node];
-	}
-	int mid = (start + end) / 2;
-	ll left = make_tree(node * 2, start, mid);
-	ll right = make_tree(node * 2 + 1, mid + 1, end);
+vector<ll> tree;
 
-	tree[node] = left + right;
-	return tree[node];
-}
+// make_tree로 한꺼번에 업데이트하는게 더 빠르긴함.
+// ll make_tree(int node, int start, int end)
+// {
+// 	if (start == end)
+// 	{
+// 		tree[node] = v[start];
+// 		return tree[node];
+// 	}
+// 	int mid = (start + end) / 2;
+// 	ll left = make_tree(node * 2, start, mid);
+// 	ll right = make_tree(node * 2 + 1, mid + 1, end);
+
+// 	tree[node] = left + right;
+// 	return tree[node];
+// }
+
 ll query(int A, int B, int n, int l, int r)
 {
 	if (l > B || r < A)
@@ -39,7 +44,7 @@ ll update(int idx, ll value, int n, int l, int r)
 	{
 		return tree[n];
 	}
-	else if (l == r && l == idx)
+	else if (l == r)
 	{
 		tree[n] = value;
 		return value;
@@ -53,31 +58,32 @@ int main()
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
 
-	int N, M, K, height, tree_size;
-	cin >> N >> M >> K;
-	height = ceil(log(N) / log(2));
-	tree_size = 1 << (height + 1);
+	int n, m, k, h, size;
+	cin >> n >> m >> k;
 
-	v.assign(N + 1, 0);
-	tree.assign(tree_size, 0);
+	h = ceil(log(n) / log(2));
+	size = 1 << (h + 1);
 
-	for (int i = 0; i < N; i++)
+	tree.assign(size, 0);
+
+	for (int i = 0; i < n; i++)
 	{
-		cin >> v[i];
+		ll x;
+		cin >> x;
+		update(i, x, 1, 0, n - 1);
 	}
-	make_tree(1, 0, N - 1);
 
-	for (int i = 0; i < M + K; i++)
+	for (int i = 0; i < m + k; i++)
 	{
-		ll x, a, b;
-		cin >> x >> a >> b;
-		if (x == 2)
+		ll a, b, c;
+		cin >> a >> b >> c;
+		if (a == 1)
 		{
-			cout << query(a - 1, b - 1, 1, 0, N - 1) << "\n";
+			update(b - 1, c, 1, 0, n - 1);
 		}
-		else if (x == 1)
+		else if (a == 2)
 		{
-			update(a - 1, b, 1, 0, N - 1);
+			cout << query(b - 1, c - 1, 1, 0, n - 1) << "\n";
 		}
 	}
 }
