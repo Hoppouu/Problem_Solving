@@ -1,11 +1,11 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+typedef long long ll;
 using namespace std;
 
-
-vector<int> v, tree;
-int make_tree(int node, int start, int end)
+vector<ll> v, tree;
+ll make_tree(int node, int start, int end)
 {
 	if (start == end)
 	{
@@ -13,15 +13,15 @@ int make_tree(int node, int start, int end)
 		return tree[node];
 	}
 	int mid = (start + end) / 2;
-	int left = make_tree(node * 2, start, mid);
-	int right = make_tree(node * 2 + 1, mid + 1, end);
-	
+	ll left = make_tree(node * 2, start, mid);
+	ll right = make_tree(node * 2 + 1, mid + 1, end);
+
 	tree[node] = left + right;
 	return tree[node];
 }
-int query(int A, int B, int n, int l, int r)
+ll query(int A, int B, int n, int l, int r)
 {
-	if(l > B || r < A)
+	if (l > B || r < A)
 	{
 		return 0;
 	}
@@ -33,20 +33,26 @@ int query(int A, int B, int n, int l, int r)
 	return query(A, B, n * 2, l, mid) + query(A, B, n * 2 + 1, mid + 1, r);
 }
 
-void update(int idx, int value, int n, int l, int r)
+ll update(int idx, ll value, int n, int l, int r)
 {
-	if (idx < l || idx > r || l == r)
+	if (idx < l || idx > r)
 	{
-		return;
+		return tree[n];
 	}
-	tree[n] = tree[n] + value;
+	else if (l == r && l == idx)
+	{
+		tree[n] = value;
+		return value;
+	}
 	int mid = (l + r) / 2;
-	update(idx, value, n * 2, l, mid);
-	update(idx, value, n * 2 + 1, mid + 1, r);
-	
+	return tree[n] = update(idx, value, n * 2, l, mid) + update(idx, value, n * 2 + 1, mid + 1, r);
 }
+
 int main()
 {
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
+
 	int N, M, K, height, tree_size;
 	cin >> N >> M >> K;
 	height = ceil(log(N) / log(2));
@@ -55,23 +61,23 @@ int main()
 	v.assign(N + 1, 0);
 	tree.assign(tree_size, 0);
 
-	for (int i = 1; i <= N; i++)
+	for (int i = 0; i < N; i++)
 	{
-		int x;
-		cin >> x;
-		v[i] = x;
+		cin >> v[i];
 	}
-	make_tree(1, 0, N);
+	make_tree(1, 0, N - 1);
 
 	for (int i = 0; i < M + K; i++)
 	{
-		int x;
-		cin >> x;
+		ll x, a, b;
+		cin >> x >> a >> b;
 		if (x == 2)
 		{
-			int a, b;
-			cin >> a >> b;
-			cout << query(a, b, 1, 0, N) << "\n";
+			cout << query(a - 1, b - 1, 1, 0, N - 1) << "\n";
+		}
+		else if (x == 1)
+		{
+			update(a - 1, b, 1, 0, N - 1);
 		}
 	}
 }
