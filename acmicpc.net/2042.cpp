@@ -1,29 +1,24 @@
-
-
 #include <iostream>
 #include <cmath>
 #include <vector>
 typedef long long ll;
 using namespace std;
 
-vector<ll> tree;
+vector<ll> v, tree;
+ll make_tree(int node, int start, int end)
+{
+	if (start == end)
+	{
+		tree[node] = v[start];
+		return tree[node];
+	}
+	int mid = (start + end) / 2;
+	ll left = make_tree(node * 2, start, mid);
+	ll right = make_tree(node * 2 + 1, mid + 1, end);
 
-// make_tree로 한꺼번에 업데이트하는게 더 빠르긴함.
-// ll make_tree(int node, int start, int end)
-// {
-// 	if (start == end)
-// 	{
-// 		tree[node] = v[start];
-// 		return tree[node];
-// 	}
-// 	int mid = (start + end) / 2;
-// 	ll left = make_tree(node * 2, start, mid);
-// 	ll right = make_tree(node * 2 + 1, mid + 1, end);
-
-// 	tree[node] = left + right;
-// 	return tree[node];
-// }
-
+	tree[node] = left + right;
+	return tree[node];
+}
 ll query(int A, int B, int n, int l, int r)
 {
 	if (l > B || r < A)
@@ -50,7 +45,8 @@ ll update(int idx, ll value, int n, int l, int r)
 		return value;
 	}
 	int mid = (l + r) / 2;
-	return tree[n] = update(idx, value, n * 2, l, mid) + update(idx, value, n * 2 + 1, mid + 1, r);
+	tree[n] = update(idx, value, n * 2, l, mid) + update(idx, value, n * 2 + 1, mid + 1, r);
+	return tree[n];
 }
 
 int main()
@@ -64,14 +60,13 @@ int main()
 	h = ceil(log(n) / log(2));
 	size = 1 << (h + 1);
 
+	v.assign(n + 1, 0);
 	tree.assign(size, 0);
-
 	for (int i = 0; i < n; i++)
 	{
-		ll x;
-		cin >> x;
-		update(i, x, 1, 0, n - 1);
+		cin >> v[i];
 	}
+	make_tree(1, 0, n - 1);
 
 	for (int i = 0; i < m + k; i++)
 	{
