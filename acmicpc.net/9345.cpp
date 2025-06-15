@@ -1,12 +1,14 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
-#define INF (1 < 31)
+#define INF ((1 << 31) - 1)
 using namespace std;
 typedef pair<int, int> pii;
 
+int t, n, m;
 vector<int> v;
 vector<pii> tree;
+
 pii make_tree(int node, int start, int end)
 {
 	if (start == end)
@@ -36,6 +38,7 @@ pii query(int A, int B, int n, int l, int r)
 	int mid = (l + r) / 2;
 	pii left = query(A, B, n * 2, l, mid);
 	pii right = query(A, B, n * 2 + 1, mid + 1, r);
+
 	pii p;
 	p.first = min(left.first, right.first);
 	p.second = max(left.second, right.second);
@@ -52,6 +55,7 @@ pii update(int idx, int value, int n, int l, int r)
 	{
 		tree[n].first = value;
 		tree[n].second = value;
+		v[idx] = value;
 		return tree[n];
 	}
 	int mid = (l + r) / 2;
@@ -65,47 +69,53 @@ pii update(int idx, int value, int n, int l, int r)
 	return tree[n];
 }
 
+void change(int a, int b)
+{
+	int t = v[a];
+	update(a, v[b], 1, 0, n - 1);
+	update(b, t, 1, 0, n - 1);
+}
+
 int main()
 {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
-
-	int n, h, size;
-	cin >> n;
-
-	h = ceil(log(n) / log(2));
-	size = 1 << (h + 1);
-
-	v.assign(n + 1, 0);
-	tree.assign(size, pii(0, 0));
-	for (int i = 0; i < n; i++)
+	cin >> t;
+	
+	while (t--)
 	{
-		v[i] = i + 1;
-	}
-	make_tree(1, 0, n - 1);
-	for (int i = 1; i < size; i++)
-	{
-		cout << tree[i].first << "\t";
-	}
-	puts("");
-	for (int i = 1; i < size; i++)
-	{
-		cout << tree[i].second << "\t";
-	}
-	for (int i = 0; i < 4; i++)
-	{
-			cout << "a\n";
-		int a, b, c;
-		cin >> a >> b >> c;
-		if (a == 1)
+		cin >> n >> m;
+		v.assign(n + 1, 0);
+		int h = ceil(log(n) / log(2));
+		int size = 1 << (h + 1);
+		tree.assign(size, pii(0, 0));
+		for (int i = 0; i < n; i++)
 		{
-			update(b - 1, c, 1, 0, n - 1);
+			v[i] = i;
 		}
-		else if (a == 2)
+		make_tree(1, 0, n - 1);
+		for (int i = 0; i < m; i++)
 		{
-			cout << "a\n";
-			cout << query(b - 1, c - 1, 1, 0, n - 1).first << " ";
-			cout << query(b - 1, c - 1, 1, 0, n - 1).second << "\n";
+			int a, b, c;
+			cin >> a >> b >> c;
+			if (a == 0)
+			{
+				change(b, c);
+			}
+			else if (a == 1)
+			{
+				int x = query(b, c, 1, 0, n - 1).first;
+				int y = query(b, c, 1, 0, n - 1).second;
+				if (b == x && c == y)
+				{
+					cout << "YES\n";
+				}
+				else
+				{
+					cout << "NO\n";
+				}
+			}
 		}
 	}
+
 }
