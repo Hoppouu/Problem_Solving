@@ -50,16 +50,17 @@ void input(int x)
 	}
 }
 
-void order_pre(node* head)
+void order_post(node* head)
 {
 	if (head == NULL)
 	{
 		return;
 	}
-	order_pre(head->left);
-	order_pre(head->right);
+	order_post(head->left);
+	order_post(head->right);
 	cout << head->data << "\n";
 }
+
 int main()
 {
 	ios::sync_with_stdio(false);
