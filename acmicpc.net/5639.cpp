@@ -70,5 +70,5 @@ int main()
 	{
 		input(x);
 	}
-	order_pre(head);
+	order_post(head);
 }
