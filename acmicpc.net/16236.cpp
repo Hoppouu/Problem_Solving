@@ -36,10 +36,18 @@ void bfs(int sr, int sc)
 			{
 				int nr = r + dr[i];
 				int nc = c + dc[i];
-				if (check(nr, nc) && cur_size >= map[nr][nc] && (dist[nr][nc] != INF && dist[nr][nc] == 0))
+				if (check(nr, nc) && (dist[nr][nc] != INF && dist[nr][nc] == 0))
 				{
-					dist[nr][nc] = count;
-					q.push({ nr, nc });
+					if (cur_size > map[nr][nc])
+					{
+						dist[nr][nc] = count;
+						q.push({ nr, nc });
+					}
+					else if (cur_size == map[nr][nc])
+					{
+						dist[nr][nc] = INF;
+						q.push({ nr, nc });
+					}
 				}
 			}
 		}
@@ -51,7 +59,10 @@ void bfs(int sr, int sc)
 		{
 			if (1 <= map[i][j] && map[i][j] <= 6 && cur_size > map[i][j])
 			{
-				minimum = min(minimum, dist[i][j]);
+				if (dist[i][j] != 0)
+				{
+					minimum = min(minimum, dist[i][j]);
+				}
 			}
 			else
 			{
@@ -100,6 +111,10 @@ void solve()
 		dist.assign(n, vector<int>(n, 0));
 		bfs(nr, nc);
 		search();
+		if (minimum == INF)
+		{
+			break;
+		}
 		time += minimum;
 		cnt++;
 		if (cnt == cur_size)
@@ -113,7 +128,7 @@ void solve()
 	}
 
 	cout << time << "\n";
-	
+
 }
 
 int main()
