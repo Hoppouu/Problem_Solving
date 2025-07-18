@@ -1,4 +1,4 @@
-//10:17
+//10:21
 #include <iostream>
 #include <vector>
 
@@ -8,21 +8,21 @@ int main()
 	vector<vector<int>> dp;
 	int n;
 	cin >> n;
-	dp.assign(n + 1, vector<int>(3, 0));
+	dp.assign(2, vector<int>(3, 0));
 	for (int i = 0; i < 3; i++)
 	{
-		dp[1][i] = 1;
+		dp[0][i] = 1;
 	}
 
 	for (int i = 2; i <= n; i++)
 	{
-		dp[i][0] = dp[i - 1][1] + dp[i - 1][2];
-		dp[i][1] = dp[i - 1][0] + dp[i - 1][2];
-		dp[i][2] = dp[i - 1][0] + dp[i - 1][1] + dp[i - 1][2];
+		dp[1][0] = dp[0][1] + dp[0][2];
+		dp[1][1] = dp[0][0] + dp[0][2];
+		dp[1][2] = dp[0][0] + dp[0][1] + dp[0][2];
 
 		for (int j = 0; j < 3; j++)
 		{
-			dp[i][j] %= 9901;
+			dp[0][j] = dp[1][j] % 9901;
 		}
 	}
 
@@ -30,7 +30,7 @@ int main()
 
 	for (int i = 0; i < 3; i++)
 	{
-		sum += dp[n][i];
+		sum += dp[0][i];
 		sum %= 9901;
 	}
 
