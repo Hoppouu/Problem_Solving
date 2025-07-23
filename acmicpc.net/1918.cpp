@@ -1,87 +1,76 @@
+//13:45
 #include <iostream>
-#include <queue>
-#include <vector>
-#define INF (1 << 30)
+#include <stack>
 using namespace std;
+stack<char> s;
 
-queue<char> var, op;
-vector<int> priority;
-void solve()
+int priority(char ch)
 {
-	
+	if (ch == '+' || ch == '-')
+	{
+		return 1;
+	}
+	else if (ch == '*' || ch == '/')
+	{
+		return 2;
+	}
+
+	return 0;
 }
 
 int main()
 {
 	string str;
-	
 	cin >> str;
-	priority.assign(str.size(), INF);
 
-	int mul = 1, plus = 2;
-	for (int i = 0; i < str.size(); i++)
+	for (int i = 0; i < str.length(); i++)
 	{
 		if ('A' <= str[i] && str[i] <= 'Z')
 		{
-			var.push(str[i]);
+			cout << str[i];
+			continue;
 		}
-		else
+		else if (str[i] == '(')
 		{
-			if (str[i] == '*')
-			{
-				priority[i] = mul;
-				op.push(str[i]);
-			}
-			else if(str[i] == '+')
-			{
-				priority[i] = plus;
-				op.push(str[i]);
-			}
-			else if(str[i] == '(')
-			{
-				mul -= 2;
-				plus -= 2;
-			}
-			else if (str[i] == ')')
-			{
-				mul += 2;
-				plus += 2;
-			}
+			s.push(str[i]);
+			continue;
 		}
-	}
-	for (int i = 0; i < str.size(); i++)
-	{
-		if (priority[i] != INF)
+		else if (str[i] == ')')
 		{
-			cout << priority[i] << " ";
+			while (s.top() != '(')
+			{
+				cout << s.top(); s.pop();
+			}
+			s.pop();
+			continue;
 		}
-	}
-	cout << "\n";
-	while (!var.empty())
-	{
-		cout << var.front() << "\n"; var.pop();
+
+		if (s.empty())
+		{
+			s.push(str[i]);
+		}
+		else if (priority(str[i]) > priority(s.top()))
+		{
+			s.push(str[i]);
+		}
+		else if (priority(str[i]) <= priority(s.top()))
+		{
+			while (!s.empty() && priority(str[i]) <= priority(s.top()))
+			{
+				cout << s.top(); s.pop();
+			}
+			s.push(str[i]);
+		}
 	}
 
-	while (!op.empty())
+	while (!s.empty())
 	{
-		cout << op.front() << "\n"; op.pop();
+		cout << s.top(); s.pop();
 	}
 }
 
 /*
-A*(B+C)
-
-A B C
-
-* +
-
 A*(B+C*D+E*F+G)
-A * ( B + C * D + E * F + G )
-  1       2    1    2    1    2
-  1       0    -1   0   -1    0
-B+{CD*}+{EF*} + G
-ABCD*+EF*+G+*
 
 ABCD*+EF*+G+*
-
 */
