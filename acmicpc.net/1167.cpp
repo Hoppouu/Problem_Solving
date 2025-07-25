@@ -1,3 +1,4 @@
+//10:50
 #include <iostream>
 #include <vector>
 using namespace std;
@@ -7,24 +8,18 @@ vector<vector<pii>> tree;
 vector<int> used, dist;
 int n;
 
-void dfs(int node, int cost, int level)
+void dfs(int node, int cost)
 {
-	used[node] = level;
-	bool flag = true;
+	used[node] = 1;
+	dist[node] = cost;
 	for (int i = 0; i < tree[node].size(); i++)
 	{
 		int next_node = tree[node][i].first;
 		int next_cost = tree[node][i].second;
 		if (!used[next_node])
 		{
-			flag = false;
-			dfs(next_node, cost + next_cost, level + 1);
+			dfs(next_node, cost + next_cost);
 		}
-	}
-
-	if (flag)
-	{
-		dist[node] = cost;
 	}
 
 }
@@ -33,37 +28,28 @@ int solve()
 {
 	used.assign(n + 1, 0);
 	dist.assign(n + 1, 0);
-	dfs(1, 0, 1);
+	dfs(1, 0);
 
-	int level = 0;
+	int cost = 0;
 	int node = 0;
-	for (int i = 1; i < used.size(); i++)
+	for (int i = 1; i <= n; i++)
 	{
-		if (level < used[i])
+		if (cost < dist[i])
 		{
-			level = used[i];
+			cost = dist[i];
 			node = i;
 		}
 	}
-	vector<int> nodes;
-	for (int i = 1; i < used.size(); i++)
-	{
-		if (used[i] == level)
-		{
-			nodes.push_back(i);
-		}
-	}
-	int cost = 0;
-	for (int i = 0; i < nodes.size(); i++)
-	{
-		used.assign(n + 1, 0);
-		dist.assign(n + 1, 0);
-		dfs(nodes[i], 0, 1);
 
-		for (int j = 1; j <= n; j++)
-		{
-			cost = max(cost, dist[j]);
-		}
+	used.assign(n + 1, 0);
+	dist.assign(n + 1, 0);
+	dfs(node, 0);
+
+
+	cost = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		cost = max(cost, dist[i]);
 	}
 
 	return cost;
@@ -71,6 +57,8 @@ int solve()
 
 int main()
 {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
 	cin >> n;
 	tree.assign(n + 1, vector<pii>());
 	for (int i = 0; i < n; i++)
