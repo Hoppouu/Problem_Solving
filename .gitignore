@@ -403,3 +403,4 @@ FodyWeavers.xsd
 *.json
 *.exe
 *.out
+build/
