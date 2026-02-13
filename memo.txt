@@ -1,2 +1,9 @@
 ios_base::sync_with_stdio(false);
 cin.tie(NULL);
+
+
+
+MAC
+1. g++ --version 
+2. cd /Library/Developer/CommandLineTools/usr/ -> include
+3. mkdir bits 후 stdc++.h 넣기
