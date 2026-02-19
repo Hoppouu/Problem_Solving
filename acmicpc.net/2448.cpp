@@ -1,40 +1,49 @@
-#include <iostream>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
-
-void solve(int n, int r, int c)
+vector<vector<char>> grid;
+void sol(int r, int c)
 {
-	bool q = r % 3 == 0 && c % 6 == 2;
-	bool w = r % 3 == 1 && (c % 6 == 1 || c % 6 == 3);
-	bool e = r % 3 == 2 && c % 6 != 5;
-	bool qq = r % 3 == 0 && c % 6 != 2;
-	bool ww = r % 3 == 1 && (c % 6 != 1 && c % 6 != 3);
-	bool ee = r % 3 == 2 && c % 6 == 5;
-	if (n == 1)
+	grid[r][c] = '*';
+	grid[r + 1][c - 1] = grid[r + 1][c + 1] = '*';
+	for(int i = 0; i < 5; i++) grid[r + 2][c + i - 2] = '*';
+}
+
+void solve(int r, int c, int n)
+{
+	if(n == 3)
 	{
-		cout << "*";
+		sol(r, c);
+		return;
 	}
-	else if (qq || ww || ee)
-	{
-		cout << " ";
-	}
-	else
-	{
-		solve(n / 3, r / 3, c / 6);
-	}
+	
+	solve(r, c, n / 2);
+	solve(r + n / 2, c - n / 2, n / 2);
+	solve(r + n / 2, c + n / 2, n / 2);
+	
 }
 int main()
 {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	
 	int n;
 	cin >> n;
+	grid.assign(n, vector<char>(n * 2));
+	solve(0, n - 1, n);
 
-	for (int i = 0; i < n; i++)
+	for(int i = 0; i < n; i++)
 	{
-		for (int j = 0; j < n * 2; j++)
+		for(int j = 0; j < n * 2; j++)
 		{
-			solve(n, i, j);
+			if(grid[i][j] != 0)
+			{
+				cout << grid[i][j];
+			}
+			else
+			{
+				cout << " ";
+			}
 		}
 		cout << "\n";
 	}
-
 }
