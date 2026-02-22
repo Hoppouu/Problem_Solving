@@ -405,3 +405,4 @@ FodyWeavers.xsd
 *.out
 build/
 main.cpp
+.DS_Store
